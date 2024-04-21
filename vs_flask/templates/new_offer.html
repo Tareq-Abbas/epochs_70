@@ -1,0 +1,50 @@
+{%extends 'layout.html'%}
+{%block content%}
+
+<div class="{{'tab-pane show active fade p-3' if active_tab=='new_offer' else 'tab-pane fade p-3'}}" id="nav-newoffer"
+    role="tabpanel" aria-labelledby="nav-newOffer-tab">
+    <form action="" method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag()}}
+        <legend class="border-bottom my-3">New Offer</legend>
+        <div class="mb-3">
+            {{ form.working_days.label(class='form-control-label')}}
+            {% if form.working_days.errors %}
+            {{ form.working_days(class='form-contro is-invalid')}}
+            <div class="invalid-feedback">
+                {% for error in form.working_days.errors %}
+                <span>{{ error }} </span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.working_days(class='form-control')}}
+            {% endif %}
+        </div>
+        <div class="mb-3">
+            {{ form.cost.label(class='form-control-label')}}
+            {% if form.cost.errors %}
+            {{ form.cost(class='form-control is-invalid')}}
+            <div class="invalid-feedback">
+                {% for error in form.cost.errors %}
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ form.cost(class='form-control')}}
+            {% endif %}
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-12">
+                <button class="btn btn-success" type="submit">Post</button>
+            </div>
+        </div>
+    </form>
+    
+
+</div>
+
+
+
+
+{%endblock content%}
