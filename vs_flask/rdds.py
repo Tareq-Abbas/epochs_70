@@ -43,19 +43,7 @@ mail = Mail(app)
 
 
 def frosted_glass_effect_with_boxes(img, boxes, blur_factor=15, transparency=0.2):
-    """
-    Applies a frosted glass effect to the image **outside** the detected boxes and
-    returns both the original image with boxes and the image with frosted glass effect.
 
-    Args:
-        img: The input image as a NumPy array.
-        boxes: A list of bounding boxes as NumPy arrays (xmin, ymin, xmax, ymax).
-        blur_factor: The kernel size for Gaussian blur (adjust for blur strength).
-        transparency: The transparency level of the frosted effect (0.0 - 1.0).
-
-    Returns:
-        The original image with boxes drawn, and the image with a frosted glass effect and boxes drawn.
-    """
 
     # Create an empty mask to mark areas outside boxes
     mask = np.zeros_like(img[:, :, 0])
