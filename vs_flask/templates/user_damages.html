@@ -1,0 +1,63 @@
+{%extends "dashboard.html"%}
+{%block user_damages%}
+<div class="{{'tab-pane fade show active p-3' if active_tab == 'user_damages' else 'tab-pane fade p-3'}}"
+    id='nav-user_damages' role="tabpanel" aria-labelledby="nav-user_damages-tab"></div>
+
+<section>
+    <div class="container p-5">
+        <div class="row mb-5 ">
+        </div>
+        <div class="row">
+            {% for damage in current_user.damages %}
+            <div class="col-sm-12 col-md-6 col-lg-4 pb-5 d-flex align-items-stretch">
+                <div class="card offer">
+                    <img src="{{url_for('static', filename='damage_images/'+damage.image_file)}}" class="card-img">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">
+                            <a class="text-decoration-none text-dark"
+                                href="{{url_for('damage', damage_id=damage.id)}}">{{damage.address}}</a>
+                        </h5>
+                        <span><img class="article-img rounded-circle"
+                                src="{{url_for('static', filename='user_pics/'+damage.applier.image_file)}}" alt="">By:
+                                <!---->
+                            <a href="{{url_for('user_page', username=damage.applier.username)}}" class="link">{{damage.applier.username}}</a></span>
+                        
+                        <div class="m-auto">
+                            <!-- this will lead us to the update page update_damage 
+                            -->
+                            <a href="{{url_for('update_damage', damage_id = damage.id)}}"
+                                class="btn btn-info btn-sm m-1">Update</a>
+
+                            <!-- if you want to add button New offer here you can find it at the end of the page -->
+                                <!-- this button is to delete the modal look at the css style in it -->
+                            <button onclick="confirmDelete({{ damage.id }})" class="btn btn-danger">Delete</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                function confirmDelete(damageId) {
+                    if (confirm("Are you sure you want to delete this damage?")) {
+                        window.location.href = "/damage/delete/" + damageId;
+                    }
+                }
+            </script>
+
+            {% endfor %}
+
+        </div>
+    </div>
+</section>
+
+{%endblock user_damages%}
+
+
+<!-- this button is to delete the modal look at the css style in it 
+{% if current_user.is_company%}
+                            <a href="{{url_for('new_offer', damage_id = damage.id)}}"
+                                class="btn btn-info btn-sm m-1">New Offer</a>
+                            {%endif%}  
+
+
+-->

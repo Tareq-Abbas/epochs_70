@@ -1,0 +1,59 @@
+{%extends "layout.html"%}
+{%block content%}
+<!-- Tabs -->
+<div class="container my-5">
+    <nav>
+        <div class="nav nav-tabs" id="tablist">
+            <a class="link" href="/dashboard/profile">
+                <!-- in dashboard route we use active_tab= None -->
+                <!-- this mean the first time we go to dashboard no tabs will be activated and we can choose any one we want -->
+                <!-- in profile route we use active_tab= 'profile' -->
+                <!-- this means when we go profile tab make the tab styled as active -->
+                <!-- in new_damage route we use active_tab= 'new_damage' -->
+                <!-- this means we go to new_damage tab this tab will be styled as active  -->
+
+                <!-- the next button represents the profile tab and when we click it we want it to be styled as active -->
+                <button class="{{'nav-link active' if active_tab=='profile' else 'nav-link'}}" id="nav-profile-tab"
+                    data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab"
+                    aria-controls="nav-profile" aria-selected="true">Profile</button>
+            </a>
+                            <!--when we click it we go to the @app.route('/dashboard/new_damage')-->
+            <p class="link" href="/dashboard/new_damage">
+                <!-- the next button represents the new_damage tab and when we click it we want it to be styled as active -->
+
+                <button class="{{'nav-link active' if active_tab=='new_damage' else 'nav-link'}}" id="nav-newDamage-tab"
+                    data-bs-toggle="tab" data-bs-target="#nav-newDamage" type="button" role="tab"
+                    aria-controls="nav-newDamage" aria-selected="true">New Damage</button>
+            </p>
+
+            <a class="link" href="/dashboard/user_damages">
+                <button class="{{'nav-link active' if active_tab=='user_damages' else 'nav-link'}}"
+                    id="nav-user_damages-tab" data-bs-toggle="tab" data-bs-target="#nav-Damages" type="button"
+                    role="tab" aria-controls="nav-Damages" aria-selected="true">Your Damages</button>
+            </a>
+
+            {% if current_user.is_company%}
+            <a class="link" href="/dashboard/user_offers">
+                <button class="{{'nav-link active' if active_tab=='user_offers' else 'nav-link'}}"
+                    id="nav-user_offers-tab" data-bs-toggle="tab" data-bs-target="#nav-Offer" type="button"
+                    role="tab" aria-controls="nav-Offer" aria-selected="true">Your Offer</button>
+            </a>
+            {%endif%}
+        </div>
+    </nav>
+    <!-- Tab contents here -->
+    <div class="tab-content" id="nav-tabContent">
+        <!-- profile -->
+        {% block profile %} {% endblock profile%}
+        <!-- New Damage -->
+        {% block new_damage %} {% endblock new_damage %}
+        <!-- User Damages -->
+        {% block user_damages %} {% endblock user_damages %}
+
+        <!-- User Offers -->
+        {% if current_user.is_company%}
+        {% block user_offers %} {% endblock user_offers %}
+        {%endif%}
+    </div>
+</div>
+{%endblock content%}
