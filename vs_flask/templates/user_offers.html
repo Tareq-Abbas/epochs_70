@@ -92,14 +92,14 @@
                                 class="btn btn-info btn-sm m-1">New Offer</a>
                             {%endif%}
                                 <!-- this button is to delete the modal look at the css style in it -->
-                            <button onclick="confirmDelete({{ damage.id }})" class="btn btn-danger">Delete</button>
+                            <button onclick="confirmDelete2({{ damage.id }})" class="btn btn-danger">Delete</button>
 
                         </div>
                     </div>
                 </div>
             </div>
             <script>
-                function confirmDelete(damageId) {
+                function confirmDelete2(damageId) {
                     if (confirm("Are you sure you want to delete this damage?")) {
                         window.location.href = "/damage/delete/" + damageId;
                     }
@@ -111,9 +111,9 @@
         </div>
         <nav class="mt-5" aria-label="...">
                 <ul class="pagination" style="display: flex; justify-content: flex-end">
-                    {% for page_num in damages.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+                    {% for page_num in pagination.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
                     {% if page_num %}
-                    {% if damages.page == page_num %}
+                    {% if pagination.page == page_num %}
                     <li class="page-item active">
                         <a href="{{url_for('user_offers', title=title, page=page_num)}}"
                             class="page-link">{{page_num}}</a>

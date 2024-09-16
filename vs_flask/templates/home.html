@@ -56,7 +56,7 @@
          var address_loc;
          map.on('click', function(e) {
             // Display a confirmation dialog
-            var confirmAddOffer = confirm("Do you want to add an offer at this location?");
+            var confirmAddOffer = confirm("Do you want to add a Damage at this location?");
             console.log(getAddressFromCoords(e.latlng.lat,e.latlng.lng));
             var address= getAddressFromCoords(e.latlng.lat,e.latlng.lng)
                 .then(address => {

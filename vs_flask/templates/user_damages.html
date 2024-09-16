@@ -28,10 +28,7 @@
                             <a href="{{url_for('update_damage', damage_id = damage.id)}}"
                                 class="btn btn-info btn-sm m-1">Update</a>
 
-                            {% if current_user.is_company%}
-                            <a href="{{url_for('new_offer', damage_id = damage.id)}}"
-                                class="btn btn-info btn-sm m-1">New Offer</a>
-                            {%endif%}
+                            <!-- if you want to add button New offer here you can find it at the end of the page -->
                                 <!-- this button is to delete the modal look at the css style in it -->
                             <button onclick="confirmDelete({{ damage.id }})" class="btn btn-danger">Delete</button>
 
@@ -54,3 +51,13 @@
 </section>
 
 {%endblock user_damages%}
+
+
+<!-- this button is to delete the modal look at the css style in it 
+{% if current_user.is_company%}
+                            <a href="{{url_for('new_offer', damage_id = damage.id)}}"
+                                class="btn btn-info btn-sm m-1">New Offer</a>
+                            {%endif%}  
+
+
+-->

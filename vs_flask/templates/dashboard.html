@@ -18,13 +18,13 @@
                     aria-controls="nav-profile" aria-selected="true">Profile</button>
             </a>
                             <!--when we click it we go to the @app.route('/dashboard/new_damage')-->
-            <a class="link" href="/dashboard/new_damage">
+            <p class="link" href="/dashboard/new_damage">
                 <!-- the next button represents the new_damage tab and when we click it we want it to be styled as active -->
 
                 <button class="{{'nav-link active' if active_tab=='new_damage' else 'nav-link'}}" id="nav-newDamage-tab"
                     data-bs-toggle="tab" data-bs-target="#nav-newDamage" type="button" role="tab"
                     aria-controls="nav-newDamage" aria-selected="true">New Damage</button>
-            </a>
+            </p>
 
             <a class="link" href="/dashboard/user_damages">
                 <button class="{{'nav-link active' if active_tab=='user_damages' else 'nav-link'}}"
