@@ -1,0 +1,112 @@
+{%extends "damage_layout.html"%}
+{%block damage%}
+<div class="container pt-5">
+    <!--until now this info are added to this page-->
+    <br>
+    <h3>Address:</h3>
+    
+    <h5> {{damage.address | safe}}</h5>
+    <hr>
+
+    <h3>damage Type::</h3>
+    
+    <h5> {{damage.type}}</h5>
+    <hr>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <div class="col">
+            <canvas id="barChart" width="300" height="100"></canvas>
+        </div>
+        <div class="col">
+            <canvas id="barChart2" width="300" height="100"></canvas>
+        </div>
+
+    <script>
+        // Extract data from Flask and format it for Chart.js
+        var costRangesData = {{ cost_ranges_counts | tojson | safe }};
+        var workingDaysRangesData = {{ working_days_ranges_counts | tojson | safe }};
+
+        // Create arrays for labels and counts for cost ranges
+        var costLabels = [];
+        var costCounts = [];
+        for (var range in costRangesData) {
+            costLabels.push(range);
+            costCounts.push(costRangesData[range]);
+        }
+        console.log(costRangesData)
+
+        // Create arrays for labels and counts for working days ranges
+        var workingDaysLabels = [];
+        var workingDaysCounts = [];
+        for (var range in workingDaysRangesData) {
+            workingDaysLabels.push(range );
+            workingDaysCounts.push(workingDaysRangesData[range]);
+        }
+
+        // Create a bar chart for cost ranges
+        var ctx = document.getElementById('barChart').getContext('2d');
+        var barChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: costLabels,
+                datasets: [{
+                    label: 'Number of Offers',
+                    data: costCounts,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Repairing Cost in €'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Offers'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Create a bar chart for working days ranges
+        var ctx2 = document.getElementById('barChart2').getContext('2d');
+        var barChart2 = new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: workingDaysLabels,
+                datasets: [{
+                    label: 'Number of Offers',
+                    data: workingDaysCounts,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Expected Working Days'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Offers'
+                        }
+                    }                
+                }
+            }
+        });
+    </script>
+</div>
+{%endblock damage%}

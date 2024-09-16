@@ -1,0 +1,70 @@
+{%extends "layout.html"%}
+{%block content%}
+<div class="container my-5 border">
+
+    <form action="" method="post">
+        <!-- form. hidden_tag will secure the form from Cross-Site Request Forgery attack -->
+
+        <!-- CSRF attack is like tricking you into unknowingly doing something on one site that 
+        affects another site where you're logged in. It's all about taking advantage of your logged-in 
+        status on different sites to make you do things you didn't intend to do. -->
+        
+        <!-- Imagine you're logged into your favorite social media site. You're still logged in when you visit a different site. 
+            Now, let's say that other site has a hidden link or a button that, when you click it, makes you do something on your 
+            social media account without you knowing. It could be posting a status or changing your password.
+             -->
+
+        {{form.hidden_tag()}}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Log In</legend>
+            
+            <div class="form-group">
+                {{form.email.label(class='form-control-label')}}
+                {%if form.email.errors%}
+                {{form.email(class='form-control form-control-lg is-invalid')}}
+                <div class="ivalid-feedback">
+                    {%for error in form.email.errors%}
+                    <span>{{error}}</span>
+                    {%endfor%}
+                </div>
+                {%else%}
+                {{form.email(class='form-control form-control-lg')}}
+                {%endif%}
+                
+            </div>
+            <div class="form-group">
+                {{form.password.label(class='form-control-label')}}
+                {%if form.password.errors%}
+                {{form.password(class='form-control form-control-lg is-invalid')}}
+                <div class="ivalid-feedback">
+                    {%for error in form.password.errors%}
+                    <span>{{error}}</span>
+                    {%endfor%}
+                </div>
+                {%else%}
+                {{form.password(class='form-control form-control-lg')}}
+                {%endif%}
+                
+            </div>
+            
+            <div class="form-group my-3">
+                {{form.submit(class='btn btn-outline-info')}}
+            </div>
+            <div class="form-check">
+                {{form.remember(class='form-check-input')}}
+                {{form.remember.label(class='form-check-input-label')}}
+            </div>
+        </fieldset>
+    </form>
+    
+        <small class="text-muted ml-2">
+            <!--    -->
+            <a href="{{url_for('reset_request')}}" class="ml-2">Forgot Password?</a>
+        </small>
+        <small class="text-muted ml-2">
+            Need an Account?
+            <a href="{{url_for('register')}}" class="ml-2">Sign Up</a>
+        </small>
+    
+</div>
+{%endblock content%}
