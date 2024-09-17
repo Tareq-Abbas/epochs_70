@@ -7,3 +7,5 @@
 
 
 # we also need to download the weights of the trained model
+
+# the app was designed on an envirenment with python 3.8
