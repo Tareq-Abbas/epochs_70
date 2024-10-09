@@ -11,13 +11,18 @@ import os
 from datetime import datetime
 from itsdangerous import URLSafeTimedSerializer as Serializer
 from flask_mail import Message, Mail
-
-
-
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+from flask_admin import AdminIndexView
+from flask_admin import expose
+from flask import Markup
 import cv2
 import torch
 import numpy as np
 import json
+from sqlalchemy import or_
+
+
 
 app= Flask(__name__)
 bcrypt= Bcrypt()
@@ -40,6 +45,9 @@ app.config["MAIL_USE_TLS"] = True
 app.config["MAIL_USERNAME"] = os.environ.get("EMAIL_USER")
 app.config["MAIL_PASSWORD"] = os.environ.get("EMAIL_PASS")
 mail = Mail(app)
+
+
+
 
 
 
@@ -614,8 +622,8 @@ class User(db.Model, UserMixin):
     is_company=db.Column(db.Boolean, default=False)
     image_file = db.Column(db.String(26), nullable= False, default='default.png')
     password=db.Column(db.String(60),nullable=False)
-    offers = db.relationship('Offer', backref='company', lazy=True)
-    damages = db.relationship('Damage', backref='applier', lazy=True)
+    offers = db.relationship('Offer', backref='company',cascade="all, delete-orphan", lazy=True)
+    damages = db.relationship('Damage', backref='applier',cascade="all, delete-orphan", lazy=True)
 
     def get_reset_token(self):
         #This line of code creates a Serializer object from the app.config['SECRET_KEY'] and 'pw-reset'
@@ -651,7 +659,7 @@ class Damage(db.Model):
     address= db.Column(db.String(126), unique=True, nullable=False)
     image_file=db.Column(db.String(26), nullable=False, default='default.png')
     use_id=db.Column(db.Integer, db.ForeignKey("user.id"),nullable=False)
-    offers= db.relationship('Offer', backref='applications', lazy=True)
+    offers= db.relationship('Offer', backref='applications',cascade="all, delete-orphan", lazy=True)
 
     def __repr__(self):
         return f"Damage('{self.type}, {self.address}')"
@@ -794,6 +802,113 @@ class ResetPasswordForm(FlaskForm):
 
 
 
+
+
+
+
+class MyAdminIndexView(AdminIndexView):
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.id == 1
+
+
+class MyModelView(ModelView):
+
+    column_searchable_list = ('id', 'email', 'username') 
+    def is_accessible(self):
+        return current_user.is_authenticated and current_user.id == 1
+    
+    def on_model_delete(self, model):
+        # Assuming 'current_user' is your logged-in admin user
+        if model.id == current_user.id:
+            flash('You cannot delete your own account.', 'error')
+            return redirect(url_for('admin.index')) 
+    
+    
+    
+
+class DamageModelView(ModelView):
+
+    column_searchable_list = ('type', 'address')  # Include address here
+
+    # show specific columns
+    column_list = ('id','type','latitude','longitude','address','image_file', 'use_id', 'view_offers')
+
+    
+
+    def _view_offers_formatter(view, context, model, name):
+        # Check if there are offers for the given damage_id (which is the same as product_id)
+        offers_exist = view.session.query(Offer).filter_by(damage_id=model.id).count() > 0
+
+        if offers_exist:
+            # Render an active button if offers exist
+            return Markup('<a class="btn btn-primary" href="{}">View Offers</a>'.format(
+                url_for('offer.index_view', damage_id=model.id)
+            ))
+        else:
+            # Render a disabled button if no offers exist
+            return Markup('<button class="btn btn-secondary" disabled>No Offers</button>')
+
+    # Register the custom formatter
+    column_formatters = {
+        'view_offers': _view_offers_formatter
+    }
+
+
+    # show the records of each column
+    form_columns =('id','type','latitude','longitude','address','image_file', 'use_id')
+    
+class OfferModelView(ModelView):
+
+
+    # Store the damage ID for filtering
+    _damage_id = None
+
+    
+
+    # we add , after damage_id because it does not accept search for only one thing so we add , to avoid the error
+    column_searchable_list = ('damage_id',)  # Include address here
+
+    # show specific columns
+    column_list = ('id','working_days', 'cost', 'use_id', 'damage_id')
+
+
+    def get_query(self):
+        """Handle filtering by damage_id for inline views and handle search."""
+        # Start with the base query
+        query = self.session.query(self.model)
+        
+        # Get the damage_id (damage_id) from the URL if navigating from damageViewModel
+        damage_id = request.args.get('damage_id')
+        
+        # Apply damage_id (damage_id) filtering if available (inline view case)
+        if damage_id:
+            query = query.filter_by(damage_id=damage_id)
+        
+        # Handle the search functionality if a search term is provided (both inline and general view)
+        search_term = request.args.get('search', None)
+        if search_term:
+            # Integrate search functionality using OR conditions across searchable columns
+            search_filter = or_(
+                self.model.damage_id.ilike(f'%{search_term}%'),
+                
+            )
+            query = query.filter(search_filter)
+
+        # Return the query, ordering by cost
+        return query.order_by(self.model.cost.asc())
+
+    # show the records of each column
+    form_columns =('id','working_days', 'cost', 'use_id', 'damage_id')
+    
+    
+
+admin = Admin(app, index_view=MyAdminIndexView(), template_mode='bootstrap3')
+
+admin.add_view(MyModelView(User, db.session))
+admin.add_view(DamageModelView(Damage, db.session))
+admin.add_view(OfferModelView(Offer, db.session))
+
+
 if __name__=='__main__':
     app.run(debug=True)
 
@@ -836,3 +951,10 @@ offer3=Offer(working_days=3, cost=30, use_id=1, damage_id=3)
 #https://www.youtube.com/watch?v=a1gPiOs6v0A&list=PLdKd-j64gDcDi1L1TUt_yGitDMsQ-UeYJ&index=3
 #https://courses.analyticsvidhya.com/pages/all-free-courses
 # the path to the detected damages image is E:\flask\flask_step1\rdds\rdds.py
+
+
+
+#printenv
+
+# export EMAIL_PASS="jabobclpkcgzopzt"
+# export EMAIL_USER="nagem2.dergham@gmail.com"
