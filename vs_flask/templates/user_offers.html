@@ -84,15 +84,14 @@
                         <div class="m-auto">
                             <!-- this will lead us to the update page update_damage 
                             -->
-                            <a href="{{url_for('update_damage', damage_id = damage.id)}}"
-                                class="btn btn-info btn-sm m-1">Update</a>
+                            
 
                             {% if current_user.is_company%}
                             <a href="{{url_for('new_offer', damage_id = damage.id)}}"
                                 class="btn btn-info btn-sm m-1">New Offer</a>
                             {%endif%}
                                 <!-- this button is to delete the modal look at the css style in it -->
-                            <button onclick="confirmDelete2({{ damage.id }})" class="btn btn-danger">Delete</button>
+                            
 
                         </div>
                     </div>
