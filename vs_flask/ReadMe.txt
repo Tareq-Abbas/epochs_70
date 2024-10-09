@@ -8,6 +8,4 @@
 
 # we also need to download the weights of the trained model
 
-# the app was designed on an envirenment with python 3.8
-follow these steps if u use new linux version with new python version
-https://linuxize.com/post/how-to-install-python-3-9-on-ubuntu-20-04/
+
