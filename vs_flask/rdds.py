@@ -863,7 +863,7 @@ class OfferModelView(ModelView):
     # Store the damage ID for filtering
     _damage_id = None
 
-    
+    column_default_sort = [ ('working_days', True),('cost', True),('id', True)]
 
     # we add , after damage_id because it does not accept search for only one thing so we add , to avoid the error
     column_searchable_list = ('damage_id',)  # Include address here
@@ -893,9 +893,9 @@ class OfferModelView(ModelView):
                 
             )
             query = query.filter(search_filter)
-
+        
         # Return the query, ordering by cost
-        return query.order_by(self.model.cost.asc())
+        return query
 
     # show the records of each column
     form_columns =('id','working_days', 'cost', 'use_id', 'damage_id')
