@@ -4,32 +4,11 @@ body::before {
     height: 70px;
 }
 
-.card {
-    transition: 0.7s ease;
-    box-shadow: 0 5px 15px rgba(1 1 1/ 15);
-    border-radius: 5px;
-    margin: 5px;
-
-}
 
 .card:hover {
     transform: scale(1.1);
 }
 
-.lesson {
-    box-shadow: 0 5px 15px rgba(200 200 200/ 15);
-    border-radius: 5px;
-    border: 1px solid #fff;
-
-}
-
-
-.offer {
-    box-shadow: 0 5px 15px rgba(200 200 200/ 15);
-    border-radius: 5px;
-    border: 1px solid #fff;
-
-}
 
 .post:hover {
     /* transform: scale(1.1); */
@@ -42,16 +21,12 @@ body::before {
 }
 
 .article-img {
-    height: 65px;
-    width: 65px;
-    margin-right: 8px;
+    height: 50px;
+    width: 50px;
+    margin: 5px;
 }
 
-.user-img {
-    height: 150px;
-    width: 150px;
-    margin-right: 8px;
-}
+
 
 .link {
     text-decoration: none;
@@ -59,10 +34,6 @@ body::before {
 
 .nobull {
     list-style-type: none;
-}
-
-.arabic-sc {
-    font-family: 'Rakkas', cursive;
 }
 
 .content-section {
@@ -88,12 +59,12 @@ body::before {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #9c9999; /* Set a white background color for the left column */
+    background-color: #7ca8e2; /* Set a white background color for the left column */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .right-column_about {
-    background-color: #c8c1c1;
+    background-color: #3b76ad;
     width: 50%;
     padding: 20px;
     overflow-y: scroll;
@@ -113,4 +84,10 @@ body::before {
 .p_about {
     line-height: 1.5;
     margin-bottom: 20px;
+}
+
+.user-img {
+    height: 120px;
+    width: 120px;
+    margin: 5px;
 }
