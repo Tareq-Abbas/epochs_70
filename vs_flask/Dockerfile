@@ -16,7 +16,7 @@ RUN apt-get update && \
 COPY . .
 # adding environment variables to the image
 ENV FLASK_APP=rdds.py
-ENV EMAIL_PASS="jabobclpkcgzopzt"
+ENV EMAIL_PASS="iuzpbayifmamuzlx"
 ENV EMAIL_USER="nagem2.dergham@gmail.com"
 
 
