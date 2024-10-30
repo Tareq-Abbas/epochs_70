@@ -30,7 +30,7 @@ login_manager.login_view = 'login' # every page needs a login before going to it
 # which mean if the user is not loged in for such pages send him to the page 'login'
 
 
-app.config['SECRET_KEY']= 'f5a389b707cb442d88a81e97bb243b1080781838420cd15c05323965b938ed57'
+app.config['SECRET_KEY']= os.environ.get('SECRET_KEY')
 
 app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite:///mydb1.db'
 
