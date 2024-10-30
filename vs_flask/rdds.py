@@ -8,7 +8,6 @@ from flask_ckeditor import CKEditorField, CKEditor
 import secrets
 from PIL import Image
 import os
-from datetime import datetime
 from itsdangerous import URLSafeTimedSerializer as Serializer
 from flask_mail import Message, Mail
 from flask_admin import Admin
@@ -20,7 +19,7 @@ import cv2
 import torch
 import numpy as np
 import json
-from sqlalchemy import or_
+from sqlalchemy import or_, and_, asc
 
 
 
@@ -241,7 +240,7 @@ def delete_picture(picture_name, path):
 def send_reset_email(user):
     token = user.get_reset_token()
     msg = Message(
-        "Pythonic App Password Reset Request",
+        "Web App Password Reset Request",
         sender="YOUR EMAIL",
         recipients=[user.email],
         body=f"""To reset your password, visit the following link:
@@ -813,6 +812,11 @@ class MyAdminIndexView(AdminIndexView):
 
 class MyModelView(ModelView):
 
+    def on_model_change(self, form, model, is_created):
+        model.password = bcrypt.generate_password_hash(form.password.data).decode(
+            "utf-8)"
+        )
+
     column_searchable_list = ('id', 'email', 'username') 
     def is_accessible(self):
         return current_user.is_authenticated and current_user.id == 1
@@ -862,11 +866,11 @@ class OfferModelView(ModelView):
 
     # Store the damage ID for filtering
     _damage_id = None
-
-    column_default_sort = [ ('working_days', True),('cost', True),('id', True)]
+    #will be sorted according to the first column name mentioned here (id, true)
+    column_default_sort = [('id', True), ('working_days', True),('cost', True)]
 
     # we add , after damage_id because it does not accept search for only one thing so we add , to avoid the error
-    column_searchable_list = ('damage_id',)  # Include address here
+    column_searchable_list = ('cost','working_days')  # Include address here
 
     # show specific columns
     column_list = ('id','working_days', 'cost', 'use_id', 'damage_id')
@@ -886,13 +890,26 @@ class OfferModelView(ModelView):
         
         # Handle the search functionality if a search term is provided (both inline and general view)
         search_term = request.args.get('search', None)
+        
+        
         if search_term:
-            # Integrate search functionality using OR conditions across searchable columns
-            search_filter = or_(
-                self.model.damage_id.ilike(f'%{search_term}%'),
-                
+            search_parts = search_term.split()
+
+            
+            '''search_filter = or_(
+            self.model.cost.ilike(f'%{search_term}%'),
+            self.model.working_days.ilike(f'%{search_term}%')
             )
-            query = query.filter(search_filter)
+            query = query.filter(search_filter)'''
+            #print("Filtered Query Results:", query)
+            try:
+                search_filter = or_(
+                self.model.cost.ilike(f'%{search_term}%'),
+                self.model.working_days.ilike(f'%{search_term}%')
+                )
+                query = query.filter(search_filter)
+            except ValueError:
+                query
         
         # Return the query, ordering by cost
         return query
@@ -914,47 +931,5 @@ if __name__=='__main__':
 
 
 
-'''
-from rdds import db, app, User, Damage, Offer
-app.app_context().push()
-db.create_all()
-user1=User(fname='joe1', lname='moe1', username='joe1',email='joe1@gmail.com',password='Pass!123')
-as we see we do not add the id=1 here because it will be added automatically
-and we dont add offers= 1 to represent the first Offer the (offers) will get the value from the user_id in Offer
-db.session.add(user1)
-db.session.commit()
-User.query.all()  ......this will use the __repr__ function to print info about each user
-
-
-dont forget to change the password to hashed password
-
-user1=User.query.filter_by(id=1).first
-user1.password=bcrypt.HASHEDPASSWORDFUNCTION
-db.session.commit()
-
-
-user1=User(fname='joe1', lname='moe1', username='joe1',email='joe1@gmail.com',password='Pass!123')  
-user2=User(fname='joe2', lname='moe2', username='joe2',email='joe2@gmail.com',password='Pass!123') 
-user3=User(fname='joe3', lname='moe3', username='joe3',email='joe3@gmail.com',password='Pass!123') 
-
-damage1=Damage(type='D00',latitude=53.522,longitude=10.000,address='there 123',use_id=1)  
-damage2=Damage(type='D10',latitude=53.511,longitude=9.99,address='there 23',use_id=2)  
-damage3=Damage(type='D20',latitude=53.544,longitude=9.88,address='there 3',use_id=3) 
-
-
-offer1=Offer(working_days=1, cost=10, use_id=3, damage_id=1)
-offer2=Offer(working_days=2, cost=20, use_id=2, damage_id=2) 
-offer3=Offer(working_days=3, cost=30, use_id=1, damage_id=3) 
-
-'''
-#https://www.youtube.com/watch?v=dKmCcnJvcdU&list=PLyhJeMedQd9TLcgIMzZFxHTGPpRiSD2Wi&index=2
-#https://www.youtube.com/watch?v=a1gPiOs6v0A&list=PLdKd-j64gDcDi1L1TUt_yGitDMsQ-UeYJ&index=3
-#https://courses.analyticsvidhya.com/pages/all-free-courses
-# the path to the detected damages image is E:\flask\flask_step1\rdds\rdds.py
-
-
-
-#printenv
-
-# export EMAIL_PASS="jabobclpkcgzopzt"
+# export EMAIL_PASS="iuzpbayifmamuzlx"
 # export EMAIL_USER="nagem2.dergham@gmail.com"
