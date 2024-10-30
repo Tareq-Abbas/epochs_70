@@ -1,15 +1,16 @@
 {% extends "layout.html"%}
 {% block content %}
 <!-- author image and bio -->
-<div class="container-fluid bg-secondary">
+<div class="container d-flex justify-content-center">
     <div class="container">
-        <div class="row p-5">
-            <div class="col-6">
+        <div class=" p-3 py-4 bg-dark">
+            <div class="text-center">
                 <img class="rounded-circle" src="{{url_for('static', filename='user_pics/' + user.image_file)}}" alt="">
+                <h3 class="mt-2 text-light">{{ user.username }}</h3> 
+                <h5 class="mt-2 text-light">{{ user.email }}</h5> 
+                
             </div>
-            <div class="col-6">
-                <span class="lead text-light">{{user.bio}}</span>
-            </div>
+            
         </div>
     </div>
 </div>
