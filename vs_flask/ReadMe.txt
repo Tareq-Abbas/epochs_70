@@ -8,4 +8,4 @@
 
 # we also need to download the weights of the trained model
 
-
+#https://stackabuse.com/flask-form-validation-with-flask-wtf/   remember to read the article i added comment in line 699 in the code
